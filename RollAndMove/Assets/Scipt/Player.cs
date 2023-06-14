@@ -10,7 +10,7 @@ public enum PlayerState: int
 
 public class Player : MonoBehaviour
 {
-    public int CurrentPoint { get; set; }
+    public int NextPoint { get; set; }
     [SerializeField]
     float Speed;
 
@@ -18,22 +18,82 @@ public class Player : MonoBehaviour
     Animator Animator;
 
     int State;
+    public bool IsWin { get; set; }
+
+    public int Turns { get; set; }
+
+    public bool IsMyTurn { get; set; }
+
+    public bool IsCompleteTurn { get; set; }
+
+    bool hasRoll { get; set; }
+
+    int RollValue;
 
     // Start is called before the first frame update
     void Start()
     {
-        CurrentPoint = 0;
-        State = (int)PlayerState.IDLE;
+        NextPoint = 1;
+        SetState(PlayerState.IDLE);
+
+        Turns = 0;
+        IsWin = false;
+        IsCompleteTurn = false;
+        hasRoll = false;
+        RollValue = 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    
+    public void MyUpdate()
     {
-        Animator.SetInteger("State", State);
+        if(IsMyTurn)
+        {
+            Playing();
+            Debug.Log("Has roll: " + hasRoll);
+            Debug.Log("Is Complete Turn: " + IsCompleteTurn);
+        }
+    }
+
+    void Playing()
+    {
+        if(!IsCompleteTurn)
+        {
+            if(!hasRoll)
+            {
+                Dice.Instance.CanRolling = true;
+                hasRoll = Dice.Instance.IsRolling();
+            }
+            else
+            {
+                if (Dice.Instance.CanRolling)
+                    RollValue = Dice.Instance.getValue();
+                else
+                {
+                    if(RollValue > 0)
+                        MoveTo(Road.Instance.GetRoadPoint(NextPoint));
+                    else 
+                    {
+                        //this will get some item if current road point has. 
+
+                        IsCompleteTurn = true;
+                        hasRoll = false;
+                        Turns++;
+                        SetState(PlayerState.IDLE);
+                    }
+                }
+            }
+        }
     }
 
     public bool MoveTo(Vector3 Destination)
     {
+        if(Destination == Vector3.zero)
+        {
+            RollValue = 0;
+            IsWin = true;
+            return false;
+        }
+
         Vector3 newPosition = Vector3.MoveTowards(transform.position, Destination, Speed * Time.deltaTime);
         if (transform.position != newPosition)
         {
@@ -45,19 +105,20 @@ public class Player : MonoBehaviour
 
             transform.position = newPosition;
 
-            SetState((int)PlayerState.WALK);
+            SetState(PlayerState.WALK);
             return true; // Move;
         }
 
-        SetState((int)PlayerState.IDLE);
-        CurrentPoint++;
+        
+        NextPoint++;
+        RollValue--;
         return false;    // Idle
     }
 
-    void SetState(int state)
+    public void SetState(PlayerState state)
     {
-        State = state;
-        Animator.SetInteger("State", state);
+        State = (int)state;
+        Animator.SetInteger("State", State);
     }
 
 }
