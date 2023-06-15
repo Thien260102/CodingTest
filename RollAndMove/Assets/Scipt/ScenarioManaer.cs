@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ScenarioManaer : MonoBehaviour
 {
+    #region Fields
+
     [SerializeField]
     Player OriginPlayerObject;
     List<Player> players;
@@ -16,7 +18,10 @@ public class ScenarioManaer : MonoBehaviour
 
     bool isEnd;
 
+    #endregion
 
+
+    #region System Events
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +52,7 @@ public class ScenarioManaer : MonoBehaviour
         if(currentPlayerTurn < players.Count)
         {
             Player player = players[currentPlayerTurn];
-            if (!player.IsWin && player.Turns != Turn)
+            if (!player.IsWin)
             {
                 player.IsMyTurn = true;
                 player.MyUpdate();
@@ -60,6 +65,7 @@ public class ScenarioManaer : MonoBehaviour
                         currentPlayerTurn = 0;
                         Turn++;
                     }
+                    Debug.Log("index: " + currentPlayerTurn);
                     player.IsCompleteTurn = false;
                     player.IsMyTurn = false;
                 }
@@ -67,4 +73,7 @@ public class ScenarioManaer : MonoBehaviour
         }
         
     }
+
+    #endregion
+
 }

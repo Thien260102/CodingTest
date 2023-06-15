@@ -11,6 +11,8 @@ public class Dice : MonoBehaviour
         private set { instance = value; }
     }
 
+    #region Fields
+
     [SerializeField]
     List<DiceSide> DiceSides;
 
@@ -24,6 +26,11 @@ public class Dice : MonoBehaviour
 
     public bool CanRolling { get; set; }
 
+    public bool IsCanGetValue { get; private set; }
+
+    #endregion
+
+    #region System Events
     // Start is called before the first frame update
     void Start()
     {
@@ -41,6 +48,8 @@ public class Dice : MonoBehaviour
         isRolling = false;
 
         CanRolling = false;
+
+        IsCanGetValue = false;
     }
 
     // Update is called once per frame
@@ -52,13 +61,18 @@ public class Dice : MonoBehaviour
             ResetDice();
     }
 
+    #endregion
+
+    #region My Events
+
     public void Roll()
     {
         if (!isRolling)
         {
             isRolling = true;
+            IsStop = false;
             Body.AddTorque(Random.Range(10000, 50000), Random.Range(1000, 5000), Random.Range(2000, 5000));
-            Body.AddForce(Random.Range(10, 50), Random.Range(100, 300), Random.Range(10, 30), ForceMode.Force);
+            Body.AddForce(Random.Range(10, 50), Random.Range(100, 300), Random.Range(10, 300), ForceMode.Force);
         }
     }
 
@@ -68,11 +82,13 @@ public class Dice : MonoBehaviour
         isRolling = false;
         IsStop = true;
         CanRolling = false;
-        Debug.Log(getValue());
+        IsCanGetValue = true;
     }
 
     public int getValue()
     {
+        IsCanGetValue = false;
+
         foreach(var element in DiceSides)
         {
             if(element.isOnGround())
@@ -102,5 +118,6 @@ public class Dice : MonoBehaviour
         return -1;
     }
 
-    public bool IsRolling() { return isRolling; }
+
+    #endregion
 }

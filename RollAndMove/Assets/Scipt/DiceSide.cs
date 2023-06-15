@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class DiceSide : MonoBehaviour
 {
+    #region Fields
     bool onGround;
 
     int value;
+
+    #endregion
+
+    #region System Events
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +31,14 @@ public class DiceSide : MonoBehaviour
             onGround = false;
     }
 
+    #endregion
+
+    #region My Events
+
     public bool isOnGround() { return onGround; }
 
     public int getValue() { return value; }
+
+    #endregion
+
 }

@@ -10,6 +10,8 @@ public enum PlayerState: int
 
 public class Player : MonoBehaviour
 {
+
+    #region Fields
     public int NextPoint { get; set; }
     [SerializeField]
     float Speed;
@@ -30,6 +32,9 @@ public class Player : MonoBehaviour
 
     int RollValue;
 
+    #endregion
+
+    #region System Events
     // Start is called before the first frame update
     void Start()
     {
@@ -43,14 +48,17 @@ public class Player : MonoBehaviour
         RollValue = 0;
     }
 
-    
+    #endregion
+
+    #region My Events
+
     public void MyUpdate()
     {
         if(IsMyTurn)
         {
             Playing();
-            Debug.Log("Has roll: " + hasRoll);
-            Debug.Log("Is Complete Turn: " + IsCompleteTurn);
+            //Debug.Log("Has roll: " + hasRoll);
+            //Debug.Log("Is Complete Turn: " + IsCompleteTurn);
         }
     }
 
@@ -61,37 +69,87 @@ public class Player : MonoBehaviour
             if(!hasRoll)
             {
                 Dice.Instance.CanRolling = true;
-                hasRoll = Dice.Instance.IsRolling();
+
+                if(Dice.Instance.IsCanGetValue)
+                {
+                    Dice.Instance.CanRolling = false;
+                    hasRoll = Dice.Instance.IsCanGetValue;
+                }
             }
             else
             {
-                if (Dice.Instance.CanRolling)
+                if (Dice.Instance.IsCanGetValue)
                     RollValue = Dice.Instance.getValue();
                 else
                 {
                     if(RollValue > 0)
                         MoveTo(Road.Instance.GetRoadPoint(NextPoint));
+                    else if(RollValue < 0)
+                    {
+                        MoveTo(Road.Instance.GetRoadPoint(NextPoint), -1);
+                    }
                     else 
                     {
-                        //this will get some item if current road point has. 
-
-                        IsCompleteTurn = true;
-                        hasRoll = false;
-                        Turns++;
                         SetState(PlayerState.IDLE);
+                        //this will get some item if current road point has. 
+                        Debug.Log("Next Point:" + NextPoint);
+
+                        Item item = Road.Instance.GetItemOnWayPoint(NextPoint - 1);
+                        
+                        if(item != null)
+                        {
+                            Debug.Log(item.Type);
+                            if (item.Type == ItemType.UseImmediately)
+                            {
+                                Debug.Log(item.UseFor);
+                                switch(item.UseFor)
+                                {
+                                    case ItemUseFor.PlusOneTurn:
+                                        Turns++;
+                                        hasRoll = false;
+                                        break;
+
+                                    case ItemUseFor.PushBack3Block:
+                                        NextPoint -= 2;
+                                        RollValue = -3;
+                                        break;
+                                }
+                            }
+
+                        }
+                        else 
+                            EndTurn();
+                        
                     }
                 }
             }
         }
     }
 
-    public bool MoveTo(Vector3 Destination)
+    void EndTurn()
+    {
+        IsCompleteTurn = true;
+        hasRoll = false;
+        Turns++;
+        Debug.Log("End Turn: " + IsCompleteTurn);
+    }
+
+    public bool MoveTo(Vector3 Destination, int isFront = 1)
     {
         if(Destination == Vector3.zero)
         {
-            RollValue = 0;
-            IsWin = true;
-            return false;
+            if(RollValue >= 0)
+            {
+                RollValue = 0;
+                IsWin = true;
+                return false;
+            }
+            else
+            {
+                RollValue = 0;
+                NextPoint++;
+                return false;
+            }
         }
 
         Vector3 newPosition = Vector3.MoveTowards(transform.position, Destination, Speed * Time.deltaTime);
@@ -110,8 +168,8 @@ public class Player : MonoBehaviour
         }
 
         
-        NextPoint++;
-        RollValue--;
+        NextPoint += isFront;
+        RollValue -= isFront;
         return false;    // Idle
     }
 
@@ -120,5 +178,7 @@ public class Player : MonoBehaviour
         State = (int)state;
         Animator.SetInteger("State", State);
     }
+
+    #endregion
 
 }
