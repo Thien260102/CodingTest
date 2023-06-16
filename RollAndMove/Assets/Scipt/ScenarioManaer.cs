@@ -35,9 +35,13 @@ public class ScenarioManaer : MonoBehaviour
                 players.Add(Instantiate_Player);
             }
 
+            int count = 1;
             // set start position for all player
             foreach (Player player in players)
+            {
+                player.Name.text = "Player " + count++;
                 player.transform.position = Road.Instance.GetRoadPoint(0);
+            }
         }
 
         currentPlayerTurn = 0;
@@ -49,7 +53,23 @@ public class ScenarioManaer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(currentPlayerTurn < players.Count)
+        foreach (Player p in players)
+            if (!p.IsWin)
+            {
+                PlayingGame();
+                return;
+            }
+
+        isEnd = true;
+    }
+
+    #endregion
+
+    #region My Events
+
+    void PlayingGame()
+    {
+        if (currentPlayerTurn < players.Count)
         {
             Player player = players[currentPlayerTurn];
             if (!player.IsWin)
@@ -70,8 +90,16 @@ public class ScenarioManaer : MonoBehaviour
                     player.IsMyTurn = false;
                 }
             }
+            else
+            {
+                currentPlayerTurn++;
+                if (currentPlayerTurn == players.Count)
+                {
+                    currentPlayerTurn = 0;
+                    Turn++;
+                }
+            }
         }
-        
     }
 
     #endregion

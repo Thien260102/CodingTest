@@ -50,34 +50,29 @@ public class Road : MonoBehaviour
         {
             distance--; 
             
-            
-            Item item = Instantiate(Items[1]);
-            item.gameObject.transform.SetParent(child);
-            item.Init(child.position, ItemType.UseImmediately, ItemUseFor.PushBack3Block);
-
             if (distance == 0)
             {
                 distance = UnityEngine.Random.Range(4, 7);
 
-                //if (isBonus)
-                //{
-                //    Item item = Instantiate(Items[1]);
-                //    item.gameObject.transform.SetParent(child);
-                //    item.Init(child.position);
-                //    //child.gameObject.GetComponent<Renderer>().material
-                //    //    = Materials.Find(element => element.Key == MATERIAL.BonusSector).Value;
-                //    //child.tag = MATERIAL.BonusSector.ToString();
-                //}
-                //else
-                //{
-                //    Item item = Instantiate(Items[0]);
-                //    item.gameObject.transform.SetParent(child);
-                //    item.Init(child.position);
+                if (isBonus)
+                {
+                    Item item = Instantiate(Items[0]);
+                    item.gameObject.transform.SetParent(child);
+                    item.Init(child.position, Items[0].Type, ItemUseFor.PlusOneTurn);
+                    //child.gameObject.GetComponent<Renderer>().material
+                    //    = Materials.Find(element => element.Key == MATERIAL.BonusSector).Value;
+                    //child.tag = MATERIAL.BonusSector.ToString();
+                }
+                else
+                {
+                    Item item = Instantiate(Items[1]);
+                    item.gameObject.transform.SetParent(child);
+                    item.Init(child.position, Items[1].Type, ItemUseFor.PushBack3Block);
 
-                //    //child.gameObject.GetComponent<Renderer>().material
-                //    //    = Materials.Find(element => element.Key == MATERIAL.FailSector).Value;
-                //    //child.tag = MATERIAL.FailSector.ToString();
-                //}
+                    //child.gameObject.GetComponent<Renderer>().material
+                    //    = Materials.Find(element => element.Key == MATERIAL.FailSector).Value;
+                    //child.tag = MATERIAL.FailSector.ToString();
+                }
 
                 //Debug.Log(isBonus);
                 isBonus = !isBonus;
@@ -88,8 +83,10 @@ public class Road : MonoBehaviour
 
             RoadPoints.Add(child.gameObject);
         }
-        //RoadPoints[RoadPoints.Count - 1].tag = MATERIAL.Normal.ToString(); // to sure end not bonus or fail sector
 
+        Item Lastitem = GetItemOnWayPoint(RoadPoints.Count - 1); // to sure end not bonus or fail sector
+        if (Lastitem != null)
+            Destroy(Lastitem.gameObject);
     }
 
     public Item GetItemOnWayPoint(int index)

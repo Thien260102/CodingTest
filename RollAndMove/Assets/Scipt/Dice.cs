@@ -71,8 +71,14 @@ public class Dice : MonoBehaviour
         {
             isRolling = true;
             IsStop = false;
-            Body.AddTorque(Random.Range(10000, 50000), Random.Range(1000, 5000), Random.Range(2000, 5000));
-            Body.AddForce(Random.Range(10, 50), Random.Range(100, 300), Random.Range(10, 300), ForceMode.Force);
+
+            Body.AddForce(Random.Range(-10, 10), Random.Range(200, 300), 0, ForceMode.Force);
+
+            float valueRandom = Random.Range(-1000, 1000);
+            Body.AddTorque(valueRandom / Random.Range(1, 5),
+               valueRandom / Random.Range(5, 10),
+                valueRandom / Random.Range(15, 20));
+
         }
     }
 

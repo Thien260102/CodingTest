@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum PlayerState: int
 {
@@ -12,12 +13,15 @@ public class Player : MonoBehaviour
 {
 
     #region Fields
-    public int NextPoint { get; set; }
+    public int CurrentPoint { get; set; }
     [SerializeField]
     float Speed;
 
     [SerializeField]
     Animator Animator;
+
+    [SerializeField]
+    public TextMesh Name;
 
     int State;
     public bool IsWin { get; set; }
@@ -38,7 +42,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        NextPoint = 1;
+        CurrentPoint = 0;
         SetState(PlayerState.IDLE);
 
         Turns = 0;
@@ -52,8 +56,15 @@ public class Player : MonoBehaviour
 
     #region My Events
 
+    void UpdateText()
+    {
+        
+    }
+
     public void MyUpdate()
     {
+        UpdateText();
+
         if(IsMyTurn)
         {
             Playing();
@@ -73,7 +84,7 @@ public class Player : MonoBehaviour
                 if(Dice.Instance.IsCanGetValue)
                 {
                     Dice.Instance.CanRolling = false;
-                    hasRoll = Dice.Instance.IsCanGetValue;
+                    hasRoll = true;
                 }
             }
             else
@@ -83,18 +94,17 @@ public class Player : MonoBehaviour
                 else
                 {
                     if(RollValue > 0)
-                        MoveTo(Road.Instance.GetRoadPoint(NextPoint));
+                        MoveTo(Road.Instance.GetRoadPoint(CurrentPoint + 1));
                     else if(RollValue < 0)
                     {
-                        MoveTo(Road.Instance.GetRoadPoint(NextPoint), -1);
+                        MoveTo(Road.Instance.GetRoadPoint(CurrentPoint - 1), -1);
                     }
                     else 
                     {
-                        SetState(PlayerState.IDLE);
                         //this will get some item if current road point has. 
-                        Debug.Log("Next Point:" + NextPoint);
+                        Debug.Log(string.Format("Current Point: {0}, Player: {1}", CurrentPoint, gameObject.name));
 
-                        Item item = Road.Instance.GetItemOnWayPoint(NextPoint - 1);
+                        Item item = Road.Instance.GetItemOnWayPoint(CurrentPoint);
                         
                         if(item != null)
                         {
@@ -105,12 +115,13 @@ public class Player : MonoBehaviour
                                 switch(item.UseFor)
                                 {
                                     case ItemUseFor.PlusOneTurn:
+                                        SetState(PlayerState.IDLE);
                                         Turns++;
                                         hasRoll = false;
                                         break;
 
                                     case ItemUseFor.PushBack3Block:
-                                        NextPoint -= 2;
+                                        
                                         RollValue = -3;
                                         break;
                                 }
@@ -131,6 +142,7 @@ public class Player : MonoBehaviour
         IsCompleteTurn = true;
         hasRoll = false;
         Turns++;
+        SetState(PlayerState.IDLE);
         Debug.Log("End Turn: " + IsCompleteTurn);
     }
 
@@ -142,12 +154,13 @@ public class Player : MonoBehaviour
             {
                 RollValue = 0;
                 IsWin = true;
+                EndTurn();
                 return false;
             }
             else
             {
                 RollValue = 0;
-                NextPoint++;
+                EndTurn();
                 return false;
             }
         }
@@ -168,7 +181,7 @@ public class Player : MonoBehaviour
         }
 
         
-        NextPoint += isFront;
+        CurrentPoint += isFront;
         RollValue -= isFront;
         return false;    // Idle
     }
