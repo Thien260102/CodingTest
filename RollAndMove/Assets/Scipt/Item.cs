@@ -47,13 +47,10 @@ public class Item : MonoBehaviour
 
     #region My Events
 
-    public void Init(Vector3 position, ItemType type, ItemUseFor useFor)
+    public void Init(Vector3 position)
     {
-        //Debug.Log(position);
         position.y += 0.5f;
         transform.position = position;
-        this.type = type;
-        this.useFor = useFor;
     }
 
     // link: https://stackoverflow.com/questions/16100/convert-a-string-to-an-enum-in-c-sharp

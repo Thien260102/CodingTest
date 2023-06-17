@@ -10,7 +10,6 @@ public class ScenarioManaer : MonoBehaviour
     Player OriginPlayerObject;
     List<Player> players;
 
-    [SerializeField]
     int TotalPlayer;
 
     int Turn;
@@ -25,6 +24,7 @@ public class ScenarioManaer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        TotalPlayer = DataManager.Instance.NumberOfPlayers();
         if(Road.Instance != null)
         {
             // Init player and add into List player
@@ -32,16 +32,12 @@ public class ScenarioManaer : MonoBehaviour
             for (int i = 0; i < TotalPlayer; i++)
             {
                 Player Instantiate_Player = Instantiate(OriginPlayerObject);
+                Instantiate_Player.Name.text = DataManager.Instance.GetPlayerName(i);
+                Instantiate_Player.transform.position = Road.Instance.GetRoadPoint(0);
+
                 players.Add(Instantiate_Player);
             }
 
-            int count = 1;
-            // set start position for all player
-            foreach (Player player in players)
-            {
-                player.Name.text = "Player " + count++;
-                player.transform.position = Road.Instance.GetRoadPoint(0);
-            }
         }
 
         currentPlayerTurn = 0;

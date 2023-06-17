@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
 
     void UpdateText()
     {
-        
+        Debug.Log(Speed);
     }
 
     public void MyUpdate()
@@ -183,6 +183,13 @@ public class Player : MonoBehaviour
         
         CurrentPoint += isFront;
         RollValue -= isFront;
+
+        if(Destination == Road.Instance.GetLastRoadPoint())
+        {
+            IsWin = true;
+            EndTurn();
+        }
+
         return false;    // Idle
     }
 

@@ -58,27 +58,18 @@ public class Road : MonoBehaviour
                 {
                     Item item = Instantiate(Items[0]);
                     item.gameObject.transform.SetParent(child);
-                    item.Init(child.position, Items[0].Type, ItemUseFor.PlusOneTurn);
-                    //child.gameObject.GetComponent<Renderer>().material
-                    //    = Materials.Find(element => element.Key == MATERIAL.BonusSector).Value;
-                    //child.tag = MATERIAL.BonusSector.ToString();
+                    item.Init(child.position);
                 }
                 else
                 {
                     Item item = Instantiate(Items[1]);
                     item.gameObject.transform.SetParent(child);
-                    item.Init(child.position, Items[1].Type, ItemUseFor.PushBack3Block);
+                    item.Init(child.position);
 
-                    //child.gameObject.GetComponent<Renderer>().material
-                    //    = Materials.Find(element => element.Key == MATERIAL.FailSector).Value;
-                    //child.tag = MATERIAL.FailSector.ToString();
                 }
 
-                //Debug.Log(isBonus);
                 isBonus = !isBonus;
             }
-            //else
-                //child.tag = MATERIAL.Normal.ToString();
 
 
             RoadPoints.Add(child.gameObject);
@@ -102,6 +93,14 @@ public class Road : MonoBehaviour
     {
         if (index < RoadPoints.Count && index >= 0)
             return RoadPoints[index].transform.position;
+
+        return Vector3.zero;
+    }
+
+    public Vector3 GetLastRoadPoint()
+    {
+        if (RoadPoints.Count > 0)
+            return RoadPoints[RoadPoints.Count - 1].transform.position;
 
         return Vector3.zero;
     }

@@ -94,7 +94,7 @@ public class Dice : MonoBehaviour
     public int getValue()
     {
         IsCanGetValue = false;
-
+        
         foreach(var element in DiceSides)
         {
             if(element.isOnGround())
