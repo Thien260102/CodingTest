@@ -29,12 +29,12 @@ public class GameManager : MonoBehaviour
 
     #region My Events
 
-    public void NextLevel()
+    public void NextScene()
     {
         LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void Reset()
+    public void ResetScene()
     {
         LoadLevel(SceneManager.GetActiveScene().buildIndex);
     }
@@ -44,6 +44,15 @@ public class GameManager : MonoBehaviour
         if (level >= 0 && level < SceneManager.sceneCountInBuildSettings)
             SceneManager.LoadScene(level);
     }
+
+    public void BackToMainMenu()
+    {
+        if (SceneManager.sceneCountInBuildSettings > 0)
+        {
+            DataManager.Instance.ClearData();
+            SceneManager.LoadScene(0);
+        }
+    }    
 
     public void QuitGame()
     {

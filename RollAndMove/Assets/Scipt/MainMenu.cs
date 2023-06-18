@@ -51,7 +51,7 @@ public class MainMenu : MonoBehaviour
 
     #region My Events
 
-    void EnterName()
+    public void EnterName()
     {
         if (InputName.activeSelf && Name != null && Order != null && Name.text != "")
         {
@@ -64,18 +64,20 @@ public class MainMenu : MonoBehaviour
                 }
                 Notify.gameObject.SetActive(false);
 
-                DataManager.Instance.SetPlayerName(Name.text);
+                // Add new player data and set name
+                DataManager.Instance.AddNewPlayerData();
+                DataManager.Instance.SetPlayerName(DataManager.Instance.NumberOfPlayers() - 1, Name.text);
 
-                Debug.Log(Name.text);
+                if (DataManager.Instance.NumberOfPlayers() == totalPayers)
+                {
+                    GameManager.Instance.NextScene();
+                    return;
+                }
                 // reset
                 Name.text = "";
                 Order.text = "Player " + (DataManager.Instance.NumberOfPlayers() + 1) + ':';
 
-                if (DataManager.Instance.NumberOfPlayers() == totalPayers)
-                {
-                    GameManager.Instance.NextLevel();
-                    return;
-                }
+                
             }
         }
     }
@@ -90,7 +92,7 @@ public class MainMenu : MonoBehaviour
             if(number >= 2 && number <= 4)
             {
                 totalPayers = number;
-                Debug.Log(totalPayers);
+                //Debug.Log(totalPayers);
                 NavigateTo(1); // Display Model, Input Name
             }
         }

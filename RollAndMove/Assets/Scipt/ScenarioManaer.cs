@@ -15,7 +15,7 @@ public class ScenarioManaer : MonoBehaviour
     int Turn;
     int currentPlayerTurn;
 
-    bool isEnd;
+    int Place;
 
     #endregion
 
@@ -42,8 +42,8 @@ public class ScenarioManaer : MonoBehaviour
 
         currentPlayerTurn = 0;
         Turn = 1;
+        Place = 1;
 
-        isEnd = false;
     }
 
     // Update is called once per frame
@@ -56,7 +56,14 @@ public class ScenarioManaer : MonoBehaviour
                 return;
             }
 
-        isEnd = true;
+        string result = "List Player: ";
+        foreach (var item in DataManager.Instance.GetAllDatas())
+        {
+            result += item.ToString() + " // ";
+        }
+        Debug.Log(result);
+
+        GameManager.Instance.NextScene();
     }
 
     #endregion
@@ -75,13 +82,19 @@ public class ScenarioManaer : MonoBehaviour
 
                 if (player.IsCompleteTurn)
                 {
+                    if(player.IsWin)
+                    {
+                        int index = DataManager.Instance.GetIndexByName(player.Name.text);
+                        DataManager.Instance.SetPlayerData(index, Place++, player.Name.text, player.Turns, player.Bonus, player.Fail);
+                    }
+
                     currentPlayerTurn++;
                     if (currentPlayerTurn == players.Count)
                     {
                         currentPlayerTurn = 0;
                         Turn++;
                     }
-                    Debug.Log("index: " + currentPlayerTurn);
+                    //Debug.Log("index: " + currentPlayerTurn);
                     player.IsCompleteTurn = false;
                     player.IsMyTurn = false;
                 }

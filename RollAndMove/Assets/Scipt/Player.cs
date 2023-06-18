@@ -36,6 +36,9 @@ public class Player : MonoBehaviour
 
     int RollValue;
 
+    public int Bonus { get; private set; }
+    public int Fail { get; private set; }
+
     #endregion
 
     #region System Events
@@ -50,6 +53,10 @@ public class Player : MonoBehaviour
         IsCompleteTurn = false;
         hasRoll = false;
         RollValue = 0;
+        Bonus = 0;
+        Fail = 0;
+
+        UpdateText();
     }
 
     #endregion
@@ -58,7 +65,9 @@ public class Player : MonoBehaviour
 
     void UpdateText()
     {
-        Debug.Log(Speed);
+        //Debug.Log(Speed);
+        Name.transform.LookAt(Camera.main.transform);
+        Name.transform.rotation = Camera.main.transform.rotation;
     }
 
     public void MyUpdate()
@@ -102,7 +111,7 @@ public class Player : MonoBehaviour
                     else 
                     {
                         //this will get some item if current road point has. 
-                        Debug.Log(string.Format("Current Point: {0}, Player: {1}", CurrentPoint, gameObject.name));
+                        //Debug.Log(string.Format("Current Point: {0}, Player: {1}", CurrentPoint, gameObject.name));
 
                         Item item = Road.Instance.GetItemOnWayPoint(CurrentPoint);
                         
@@ -118,11 +127,12 @@ public class Player : MonoBehaviour
                                         SetState(PlayerState.IDLE);
                                         Turns++;
                                         hasRoll = false;
+                                        Bonus++;
                                         break;
 
                                     case ItemUseFor.PushBack3Block:
-                                        
                                         RollValue = -3;
+                                        Fail++;
                                         break;
                                 }
                             }
@@ -143,7 +153,6 @@ public class Player : MonoBehaviour
         hasRoll = false;
         Turns++;
         SetState(PlayerState.IDLE);
-        Debug.Log("End Turn: " + IsCompleteTurn);
     }
 
     public bool MoveTo(Vector3 Destination, int isFront = 1)

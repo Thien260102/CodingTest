@@ -38,8 +38,6 @@ public class Dice : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
-        // just need load one time
-        DontDestroyOnLoad(this);
 
         Body = GetComponent<Rigidbody>();
         
@@ -74,11 +72,10 @@ public class Dice : MonoBehaviour
 
             Body.AddForce(Random.Range(-10, 10), Random.Range(200, 300), 0, ForceMode.Force);
 
-            float valueRandom = Random.Range(-1000, 1000);
-            Body.AddTorque(valueRandom / Random.Range(1, 5),
-               valueRandom / Random.Range(5, 10),
-                valueRandom / Random.Range(15, 20));
-
+            Body.AddRelativeTorque(
+                Random.Range(0, 500),
+                Random.Range(0, 500),
+                Random.Range(0, 500));
         }
     }
 

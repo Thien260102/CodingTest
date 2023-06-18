@@ -28,8 +28,6 @@ public class Road : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
-        // just need load one time
-        DontDestroyOnLoad(this);
 
         //Load all road points
         LoadRoadPoints();
