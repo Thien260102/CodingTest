@@ -316,7 +316,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -354,6 +354,7 @@ MonoBehaviour:
   - {fileID: 1765595061553141286}
   - {fileID: 1765595063040448147}
   - {fileID: 1765595062096356182}
+  Notify: {fileID: 0}
 --- !u!1 &1765595061972115759
 GameObject:
   m_ObjectHideFlags: 0

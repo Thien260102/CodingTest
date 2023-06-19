@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     public TextMesh Name;
 
+    [SerializeField]
+    GameObject FloatingText;
+
     int State;
     public bool IsWin { get; set; }
 
@@ -128,11 +131,13 @@ public class Player : MonoBehaviour
                                         Turns++;
                                         hasRoll = false;
                                         Bonus++;
+                                        ShowFloatingText(ItemUseFor.PlusOneTurn.ToString());
                                         break;
 
                                     case ItemUseFor.PushBack3Block:
                                         RollValue = -3;
                                         Fail++;
+                                        ShowFloatingText(ItemUseFor.PushBack3Block.ToString());
                                         break;
                                 }
                             }
@@ -206,6 +211,14 @@ public class Player : MonoBehaviour
     {
         State = (int)state;
         Animator.SetInteger("State", State);
+    }
+
+    public void ShowFloatingText(string text)
+    {
+        Vector3 position = transform.position;
+        position.y += 0.5f;
+        var floatingText = Instantiate(FloatingText, position, FloatingText.transform.rotation);
+        floatingText.GetComponent<TextMesh>().text = text; 
     }
 
     #endregion

@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 [Serializable]
 public class PlayerData
 {
+    #region Properties
+
     public int Place;
     public string Name;
     public int Turns;
     public int BonusSector;
     public int FailSector;
 
+    #endregion
+
+    #region Methods
     public PlayerData()
     {
         Place = 0;
@@ -30,4 +35,6 @@ public class PlayerData
             + ", Bonus: " + BonusSector 
             + ", Fail: " + FailSector;
     }
+
+    #endregion
 }

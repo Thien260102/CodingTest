@@ -16,6 +16,9 @@ public class Dice : MonoBehaviour
     [SerializeField]
     List<DiceSide> DiceSides;
 
+    [SerializeField]
+    TMPro.TMP_Text Notify;
+
     Rigidbody Body;
 
     Vector3 OriginPosition;
@@ -53,10 +56,15 @@ public class Dice : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (CanRolling && Input.GetKeyDown(KeyCode.Space))
-            Roll();
+        if (CanRolling)
+        {
+            DisplayNotify();   
+            if(Input.GetKeyDown(KeyCode.Space))
+                Roll();
+        }
         if (isRolling && Body.IsSleeping())
             ResetDice();
+
     }
 
     #endregion
@@ -121,6 +129,10 @@ public class Dice : MonoBehaviour
         return -1;
     }
 
+    void DisplayNotify()
+    {
+        Notify.gameObject.SetActive(true);
+    }
 
     #endregion
 }

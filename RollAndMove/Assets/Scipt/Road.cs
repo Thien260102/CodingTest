@@ -73,9 +73,17 @@ public class Road : MonoBehaviour
             RoadPoints.Add(child.gameObject);
         }
 
-        Item Lastitem = GetItemOnWayPoint(RoadPoints.Count - 1); // to sure end not bonus or fail sector
-        if (Lastitem != null)
-            Destroy(Lastitem.gameObject);
+        if(RoadPoints.Count > 0)
+        {
+            // to sure end not bonus or fail sector in the end of Road.
+            Item Lastitem = RoadPoints[RoadPoints.Count - 1].GetComponentInChildren<Item>(); 
+            if (Lastitem != null)
+            {
+                Lastitem.gameObject.transform.parent = null;
+                Destroy(Lastitem.gameObject);
+            }
+        }
+        
     }
 
     public Item GetItemOnWayPoint(int index)

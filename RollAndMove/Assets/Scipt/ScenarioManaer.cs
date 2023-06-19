@@ -7,6 +7,9 @@ public class ScenarioManaer : MonoBehaviour
     #region Fields
 
     [SerializeField]
+    GameObject Effect;
+
+    [SerializeField]
     Player OriginPlayerObject;
     List<Player> players;
 
@@ -24,21 +27,30 @@ public class ScenarioManaer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        TotalPlayer = DataManager.Instance.NumberOfPlayers();
-        if(Road.Instance != null)
+        Effect = Instantiate(Effect);
+
+        if (DataManager.Instance != null)
         {
-            // Init player and add into List player
-            players = new List<Player>();
-            for (int i = 0; i < TotalPlayer; i++)
+            TotalPlayer = DataManager.Instance.NumberOfPlayers();
+            if (Road.Instance != null)
             {
-                Player Instantiate_Player = Instantiate(OriginPlayerObject);
-                Instantiate_Player.Name.text = DataManager.Instance.GetPlayerName(i);
-                Instantiate_Player.transform.position = Road.Instance.GetRoadPoint(0);
+                // Init player and add into List player
+                players = new List<Player>();
+                for (int i = 0; i < TotalPlayer; i++)
+                {
+                    Player Instantiate_Player = Instantiate(OriginPlayerObject);
+                    Instantiate_Player.Name.text = DataManager.Instance.GetPlayerName(i);
+                    Instantiate_Player.transform.position = Road.Instance.GetRoadPoint(0);
 
-                players.Add(Instantiate_Player);
+                    players.Add(Instantiate_Player);
+                }
+
+                if (players.Count > 0)
+                    SetEffectAtPlayer(players[0].transform);
+
             }
-
         }
+        
 
         currentPlayerTurn = 0;
         Turn = 1;
@@ -49,21 +61,25 @@ public class ScenarioManaer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (Player p in players)
-            if (!p.IsWin)
-            {
-                PlayingGame();
-                return;
-            }
-
-        string result = "List Player: ";
-        foreach (var item in DataManager.Instance.GetAllDatas())
+        if(players != null)
         {
-            result += item.ToString() + " // ";
-        }
-        Debug.Log(result);
+            foreach (Player p in players)
+                if (!p.IsWin)
+                {
+                    PlayingGame();
+                    return;
+                }
 
-        GameManager.Instance.NextScene();
+            string result = "List Player: ";
+            foreach (var item in DataManager.Instance.GetAllDatas())
+            {
+                result += item.ToString() + " // ";
+            }
+            Debug.Log(result);
+
+            GameManager.Instance.NextScene();
+        }
+        
     }
 
     #endregion
@@ -79,6 +95,7 @@ public class ScenarioManaer : MonoBehaviour
             {
                 player.IsMyTurn = true;
                 player.MyUpdate();
+                SetEffectAtPlayer(player.transform);
 
                 if (player.IsCompleteTurn)
                 {
@@ -86,6 +103,7 @@ public class ScenarioManaer : MonoBehaviour
                     {
                         int index = DataManager.Instance.GetIndexByName(player.Name.text);
                         DataManager.Instance.SetPlayerData(index, Place++, player.Name.text, player.Turns, player.Bonus, player.Fail);
+                        player.ShowFloatingText("Finish");
                     }
 
                     currentPlayerTurn++;
@@ -109,6 +127,15 @@ public class ScenarioManaer : MonoBehaviour
                 }
             }
         }
+    }
+
+    void SetEffectAtPlayer(Transform player)
+    {
+        //Effect.transform.SetParent(player.transform);
+
+        Vector3 position = player.transform.position;
+        position.y += 0.1f;
+        Effect.transform.position = position;
     }
 
     #endregion

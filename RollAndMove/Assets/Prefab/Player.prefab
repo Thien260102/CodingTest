@@ -1240,6 +1240,7 @@ MonoBehaviour:
   Speed: 1
   Animator: {fileID: 3797678344200334677}
   Name: {fileID: 6178789367200261771}
+  FloatingText: {fileID: 2089685778102036202, guid: c8027610979e6454f91e3f5b731ede33, type: 3}
 --- !u!1 &7587251216482695671
 GameObject:
   m_ObjectHideFlags: 0
