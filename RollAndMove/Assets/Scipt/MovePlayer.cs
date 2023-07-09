@@ -7,6 +7,7 @@ public class MovePlayer : MonoBehaviour
     float speed = 10.0f;
     float gravity = 20.0f;
     float jumpspeed = 8f;
+    float rotatespeed = 5f;
 
     Vector3 move = Vector3.zero;
 
@@ -36,5 +37,8 @@ public class MovePlayer : MonoBehaviour
 
         move.y -= gravity * Time.deltaTime;
         controller.Move(move * Time.deltaTime);
+
+        transform.Rotate(0, Input.GetAxis("Horizontal") * rotatespeed, 0);
+
     }
 }
