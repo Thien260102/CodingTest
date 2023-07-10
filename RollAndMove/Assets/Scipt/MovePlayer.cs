@@ -9,7 +9,7 @@ public class MovePlayer : MonoBehaviour
     float jumpspeed = 8f;
     float rotatespeed = 5f;
 
-    Vector3 move = Vector3.zero;
+    Vector3 PlayerMove = Vector3.zero;
 
     CharacterController controller;
     // Start is called before the first frame update
@@ -25,20 +25,28 @@ public class MovePlayer : MonoBehaviour
         {
             Debug.Log("Key press");
 
-            move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            move = transform.TransformDirection(move);
-            move *= speed;
+            float move = Input.GetAxis("Vertical");
+            if (move == 0)
+                move = TouchControl.playerMoveAxisTouch;
+
+            PlayerMove = new Vector3(0, 0, move);
+            PlayerMove = transform.TransformDirection(PlayerMove);
+            PlayerMove *= speed;
 
             if (Input.GetButton("Jump"))
             {
-                move.y = jumpspeed;
+                PlayerMove.y = jumpspeed;
             }
         }
 
-        move.y -= gravity * Time.deltaTime;
-        controller.Move(move * Time.deltaTime);
+        PlayerMove.y -= gravity * Time.deltaTime;
+        controller.Move(PlayerMove * Time.deltaTime);
 
-        transform.Rotate(0, Input.GetAxis("Horizontal") * rotatespeed, 0);
+        float rotate = Input.GetAxis("Horizontal");
+        if (rotate == 0)
+            rotate = TouchControl.playerTurnAxisTouch;
+
+        transform.Rotate(0, rotate * rotatespeed, 0);
 
     }
 }
