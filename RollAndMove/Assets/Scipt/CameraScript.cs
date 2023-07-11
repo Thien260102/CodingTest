@@ -4,23 +4,24 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    static WebCamTexture webcamera;
+    GameObject Target;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (webcamera == null)
-            webcamera = new WebCamTexture();
-
-        GetComponent<Renderer>().material.mainTexture = webcamera;
-
-        if (!webcamera.isPlaying)
-            webcamera.Play();
+        Target = GameObject.Find("SimplePlayer");
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        
+        //Vector3 targetPosition = new Vector3(Target.transform.position.x,
+        //                                    transform.position.y,
+        //                                    Target.transform.position.z);
+        Vector3 targetPosition = new Vector3(Target.transform.position.x,
+                                            Target.transform.position.y,
+                                            Target.transform.position.z);
+
+        transform.LookAt(targetPosition);
     }
 }
