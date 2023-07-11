@@ -21,7 +21,7 @@ public class MovePlayer : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(controller.isGrounded)
+        if (controller.isGrounded)
         {
             Debug.Log("Key press");
 
