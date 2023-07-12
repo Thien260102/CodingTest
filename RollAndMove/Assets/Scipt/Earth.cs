@@ -13,7 +13,7 @@ public class Earth : MonoBehaviour
 
         objectTransform.GetComponent<Rigidbody>().AddForce(gravityUp * Gravity);
 
-        Debug.Log(gravityUp * Gravity);
+        //Debug.Log(gravityUp * Gravity);
 
         Quaternion target = Quaternion.FromToRotation(localUp, gravityUp) * objectTransform.rotation;
         objectTransform.rotation = Quaternion.Slerp(objectTransform.rotation, target, 50f * Time.deltaTime);

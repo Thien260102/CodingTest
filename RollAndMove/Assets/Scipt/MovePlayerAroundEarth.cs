@@ -38,7 +38,7 @@ public class MovePlayerAroundEarth : MonoBehaviour
         if (earth)
         {
             earth.Attract(playerTransform);
-            Debug.Log("Attract");
+            //Debug.Log("Attract");
         }
     }
 }
